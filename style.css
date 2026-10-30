@@ -7,3 +7,12 @@
 .cabinet-msg{min-height:0;margin:8px 3px 0;color:var(--muted);font-size:12px;line-height:1.5}.cabinet-msg:empty{display:none}
 .cabinet.skeleton .cabinet-grid b,.cabinet.skeleton .profile b{color:transparent;border-radius:6px;width:70%;user-select:none;background:linear-gradient(90deg,#1a1f2c 25%,#262c3c 50%,#1a1f2c 75%);background-size:200% 100%;animation:sk 1.2s infinite linear}
 @keyframes sk{to{background-position:-200% 0}}
+
+.topup{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.topup-title{font-weight:750;margin:0 2px 10px}
+.topup-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.topup-btn{padding:12px 4px;border:1px solid #75f7d044;border-radius:12px;background:#0c0f15;color:var(--accent);font-size:14px;font-weight:800;cursor:pointer;transition:.15s}
+.topup-btn:hover{border-color:var(--accent);box-shadow:0 8px 25px #75f7d022}
+.topup-btn:disabled{opacity:.5;cursor:wait}
+.topup-msg{margin:10px 3px 0;color:var(--muted);font-size:12px;line-height:1.5}.topup-msg:empty{display:none}
+@media(max-width:390px){.topup-btns{grid-template-columns:repeat(2,1fr)}}

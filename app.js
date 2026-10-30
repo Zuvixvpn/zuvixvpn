@@ -83,6 +83,9 @@ let balance = 0;
 let discount = 0;
 let hasSub = false;
 let loaded = false;
+let topupEnabled = false;
+let topupAmounts = [100, 300, 500, 1000];
+let topupPoll = null;
 
 // Экранирование данных из API перед вставкой в HTML
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
@@ -131,7 +134,13 @@ function updateBuyState() {
   if (!selected || !loaded) { buyMsg.textContent = ""; return; }
   const need = selected.price - balance;
   if (need > 0) {
-    buyMsg.innerHTML = `Не хватает <b>${need} ₽</b>. <a href="https://t.me/ZUVIXv" target="_blank" rel="noopener">Пополнить через поддержку</a>`;
+    buyMsg.innerHTML = topupEnabled
+      ? `Не хватает <b>${need} ₽</b>. <a href="#topup" id="goTopup">Пополнить баланс</a>`
+      : `Не хватает <b>${need} ₽</b>. <a href="https://t.me/ZUVIXv" target="_blank" rel="noopener">Пополнить через поддержку</a>`;
+    buyMsg.querySelector("#goTopup")?.addEventListener("click", e => {
+      e.preventDefault();
+      document.getElementById("topup")?.scrollIntoView({behavior: "smooth", block: "center"});
+    });
   } else {
     buyMsg.textContent = "Баланса достаточно — нажмите «Продолжить».";
   }
@@ -178,26 +187,28 @@ function showPayments(payments) {
   list.innerHTML = payments.map(p => {
     const d = new Date(p.created_at);
     const date = Number.isNaN(d.getTime()) ? "" : d.toLocaleDateString("ru-RU");
-    return `<div class="payment-row"><div><b>${esc(p.amount)} ₽</b><small>${esc(p.months)} мес. · ${esc(p.method || "оплата")}</small></div><small>${esc(date)}</small></div>`;
+    return `<div class="payment-row"><div><b>${esc(p.amount)} ₽</b><small>${Number(p.months) > 0 ? esc(p.months) + " мес. · " : "Пополнение · "}${esc(p.method || "оплата")}</small></div><small>${esc(date)}</small></div>`;
   }).join("");
   wrap.classList.remove("hidden");
 }
 
-async function loadCabinet() {
+async function loadCabinet(silent = false) {
   if (!tgId) {
     showUser(null);
     document.getElementById("syncStatus").textContent = "Откройте в Telegram";
     return;
   }
-  cabinetEl.classList.add("skeleton");
+  if (!silent) cabinetEl.classList.add("skeleton");
   try {
     const r = await fetch(`${API_BASE}/user?${authQuery()}`);
     const json = await r.json();
     loaded = !!json.ok;
+    setupTopup(json);
     showUser(json.user);
     showPayments(json.payments);
     document.getElementById("syncStatus").textContent = json.ok ? "Синхронизировано" : "Ошибка";
   } catch {
+    if (silent) return;
     loaded = false;
     showUser(null);
     document.getElementById("syncStatus").textContent = "API недоступен";
@@ -313,6 +324,63 @@ promoBtn.addEventListener("click", async () => {
     promoBtn.disabled = false;
   }
 });
+
+// ---------- пополнение баланса (RollyPay) ----------
+const topupEl = document.getElementById("topup");
+const topupBtns = document.getElementById("topupBtns");
+const topupMsg = document.getElementById("topupMsg");
+
+function setupTopup(json) {
+  topupEnabled = !!json?.topup_enabled;
+  if (Array.isArray(json?.topup_amounts) && json.topup_amounts.length) topupAmounts = json.topup_amounts.map(Number);
+  topupEl.classList.toggle("hidden", !(topupEnabled && loaded));
+  if (!topupEnabled || topupBtns.childElementCount) return;
+  topupBtns.innerHTML = topupAmounts.map(a => `<button class="topup-btn" data-amount="${a}">${a} ₽</button>`).join("");
+  topupBtns.querySelectorAll(".topup-btn").forEach(b =>
+    b.addEventListener("click", () => startTopup(Number(b.dataset.amount))));
+}
+
+async function startTopup(amount) {
+  if (!tgId) { topupMsg.textContent = "Откройте сайт из Telegram, чтобы пополнить баланс."; return; }
+  const buttons = topupBtns.querySelectorAll("button");
+  buttons.forEach(b => b.disabled = true);
+  topupMsg.textContent = "Создаём платёж…";
+  try {
+    const r = await fetch(`${API_BASE}/topup`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({tg_id: tgId, auth, amount})
+    });
+    const json = await r.json();
+    if (!json.ok || !json.pay_url) throw new Error(json.error || "fail");
+    topupMsg.textContent = "Откройте страницу оплаты. Баланс обновится автоматически после оплаты.";
+    if (tg?.openLink) tg.openLink(json.pay_url); else window.open(json.pay_url, "_blank");
+    watchBalance();
+  } catch {
+    topupMsg.textContent = "Не удалось создать платёж. Попробуйте позже или напишите в поддержку.";
+    tg?.HapticFeedback?.notificationOccurred("error");
+  } finally {
+    buttons.forEach(b => b.disabled = false);
+  }
+}
+
+// После перехода к оплате раз в 5 секунд (до ~3 минут) проверяем, пришли ли деньги.
+function watchBalance() {
+  const start = balance;
+  let n = 0;
+  clearInterval(topupPoll);
+  topupPoll = setInterval(async () => {
+    n++;
+    await loadCabinet(true);
+    if (balance > start) {
+      clearInterval(topupPoll);
+      topupMsg.textContent = `✓ Баланс пополнен: ${balance} ₽`;
+      tg?.HapticFeedback?.notificationOccurred("success");
+    } else if (n >= 36) {
+      clearInterval(topupPoll);
+    }
+  }, 5000);
+}
 
 loadCabinet();
 
