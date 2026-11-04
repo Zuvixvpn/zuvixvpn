@@ -2,123 +2,252 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Zuvix VPN</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ZUVIX VPN — быстрый и безопасный доступ</title>
+<meta name="description" content="ZUVIX VPN: без логов, высокая скорость, подписка от 89 ₽. Оплата на сайте, ключ приходит сразу.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Unbounded:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060b1d;--bg2:#0a1330;--card:#0d1838;--line:#1b2a57;--text:#eaf0ff;--muted:#8a99c4;--blue:#3d7bff;--ice:#a9c8ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.6 Manrope,system-ui,sans-serif}
+a{color:var(--ice)}h1,h2,h3{font-family:Unbounded,Manrope,sans-serif;line-height:1.15;margin:0}
+:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+.wrap{max-width:1040px;margin:auto;padding:0 20px}
+header{position:sticky;top:0;z-index:5;background:#060b1dee;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:24px;height:64px}
+.logo{font:800 18px Unbounded,sans-serif;letter-spacing:.08em;color:var(--text);text-decoration:none;margin-right:auto}
+.logo i{color:var(--blue);font-style:normal}
+nav{display:flex;gap:22px}nav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600}nav a:hover{color:var(--text)}
+.btn{border:0;border-radius:12px;padding:12px 20px;font:800 14px Manrope,sans-serif;cursor:pointer;background:var(--blue);color:#fff;text-decoration:none;display:inline-block}
+.btn:hover{background:#5a91ff}.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}.btn.ghost:hover{border-color:var(--blue)}
+.btn:disabled{opacity:.5;cursor:wait}
+.hero{padding:84px 20px 70px;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(34px,5.4vw,56px);letter-spacing:-.02em}
+.hero p{color:var(--muted);font-size:18px;max-width:460px;margin:20px 0 30px}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.panel{background:linear-gradient(160deg,#0f1f4d,#0a1330);border:1px solid var(--line);border-radius:24px;padding:26px}
+.panel .row{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line);font-size:15px}
+.panel .row:last-child{border:0}.panel .row span{color:var(--muted)}.ok{color:#7fd6ff;font-weight:800}
+section{padding:60px 0}section h2{font-size:clamp(24px,3.4vw,34px);margin-bottom:10px}.lead{color:var(--muted);margin:0 0 30px}
+.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.plan{position:relative;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px 20px;display:flex;flex-direction:column;gap:6px}
+.plan.hot{border-color:var(--blue);background:linear-gradient(170deg,#12275f,#0d1838)}
+.plan em{position:absolute;top:-11px;left:20px;background:var(--blue);font-style:normal;font-size:11px;font-weight:800;padding:3px 10px;border-radius:8px}
+.plan h3{font-size:16px}.plan .days{color:var(--muted);font-size:13px}
+.price{font:800 30px Unbounded,sans-serif;margin-top:14px}.price s{font:600 14px Manrope;color:var(--muted);margin-right:6px}
+.per{color:var(--muted);font-size:13px;margin-bottom:16px}.plan .btn{margin-top:auto;text-align:center}
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.feat div,.step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+.feat b,.step b{display:block;margin-bottom:6px}.feat span,.step span{color:var(--muted);font-size:14px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;counter-reset:s}
+.step{counter-increment:s}.step:before{content:counter(s);display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--blue);font-weight:800;margin-bottom:12px}
+#cab{background:var(--bg2);border-block:1px solid var(--line)}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+.grid4 div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}.grid4 small{color:var(--muted);display:block}.grid4 b{font-size:18px}
+.keybox{display:flex;gap:8px;margin:6px 0 18px}.keybox input,.promo input{flex:1;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:12px 14px;font:14px Manrope}
+.promo{display:flex;gap:8px;max-width:420px}
+.msg{color:var(--ice);font-size:14px;min-height:22px;margin:8px 0}
+.pay{display:flex;justify-content:space-between;border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:8px;font-size:14px;background:var(--card)}
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:10px}
+summary{padding:16px 18px;cursor:pointer;font-weight:700}details p{margin:0;padding:0 18px 16px;color:var(--muted);font-size:15px}
+.sup{display:flex;gap:12px;flex-wrap:wrap}
+footer{border-top:1px solid var(--line);padding:30px 0 50px;color:var(--muted);font-size:13px}
+footer .links{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}
+.hidden{display:none!important}
+.modal{position:fixed;inset:0;background:#000a;display:grid;place-items:center;padding:16px;z-index:9}
+.mbox{background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:26px;max-width:560px;max-height:85vh;overflow:auto}
+.mbox h3{margin-bottom:12px;font-size:20px}.mbox p{color:var(--muted)}
+@media(max-width:860px){nav{display:none}.hero{grid-template-columns:1fr;padding-top:48px}.plans{grid-template-columns:1fr 1fr}.feat,.steps{grid-template-columns:1fr}.grid4{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.plans{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-<div class="noise"></div>
-<main>
-  <header>
-    <div class="brand"><span class="dot"></span><span>ZUVIX</span></div>
-    <div class="header-actions">
-      <button class="chip" id="faqChip">FAQ</button>
-      <button class="chip support" id="supportChip">🆘 Поддержка</button>
-      <div class="status"><i></i> ONLINE</div>
-    </div>
-  </header>
+<header><div class="wrap bar">
+  <a class="logo" href="#top">ZUVIX<i>.</i>VPN</a>
+  <nav><a href="#plans">Тарифы</a><a href="#how">Как подключить</a><a href="#faq">Вопросы</a><a href="#support">Поддержка</a></nav>
+  <button class="btn ghost" id="loginTop">Войти через Telegram</button>
+  <span id="userTop" class="hidden"><a class="btn ghost" href="#cab">Кабинет</a></span>
+</div></header>
 
-  <section class="hero">
-    <div class="orb"></div>
-    <p class="eyebrow">NEXT-GEN CONNECTION</p>
-    <h1>Свобода<br><span>без границ.</span></h1>
-    <p class="sub">Выбери доступ и управляй подпиской в одном месте.</p>
-  </section>
+<main id="top">
+<div class="wrap hero">
+  <div>
+    <h1>VPN, который просто работает</h1>
+    <p>Без логов подключений, высокая скорость и доступ сразу после оплаты. Подписка от 89 ₽.</p>
+    <div class="cta"><a class="btn" href="#plans">Выбрать тариф</a><a class="btn ghost" href="#how">Как подключить</a></div>
+  </div>
+  <div class="panel" aria-label="Что входит">
+    <div class="row"><span>Логи подключений</span><b class="ok">не ведём</b></div>
+    <div class="row"><span>Устройства</span><b>до 3</b></div>
+    <div class="row"><span>Ключ</span><b>сразу после оплаты</b></div>
+    <div class="row"><span>Поддержка</span><b>24/7</b></div>
+  </div>
+</div>
 
-  <section id="cabinet" class="cabinet card">
-    <div class="section-title"><span>👤 Личный кабинет</span><small id="syncStatus">Синхронизация</small></div>
-    <div class="profile"><div class="avatar" id="avatar">Z</div><div><b id="userName">Пользователь Telegram</b><small id="userId">ID: —</small></div></div>
-    <div class="cabinet-grid">
-      <div><small>Подписка</small><b id="subStatus">Нет активной</b></div>
-      <div><small>Действует до</small><b id="expires">—</b></div>
-      <div><small>Баланс</small><b id="balance">0 ₽</b></div>
-      <div><small>Скидка</small><b id="discount">—</b></div>
-    </div>
-    <p id="expireWarn" class="expire-warn hidden"></p>
-    <button id="copyConfig" class="copy-btn hidden">🔑 Скопировать ключ</button>
-    <div id="topup" class="topup hidden">
-      <div class="topup-title">💳 Пополнить баланс</div>
-      <div id="topupBtns" class="topup-btns"></div>
-      <p id="topupMsg" class="topup-msg"></p>
-    </div>
-    <p id="cabinetMsg" class="cabinet-msg"></p>
-  </section>
+<section id="plans"><div class="wrap">
+  <h2>Тарифы</h2><p class="lead">Оплата картой или СБП на странице платёжного сервиса. Доступ активируется автоматически.</p>
+  <div class="plans" id="planGrid"></div>
+  <p class="msg" id="buyMsg"></p>
+</div></section>
 
-  <section>
-    <div class="section-title"><span>Тариф</span><small>Выберите один</small></div>
-    <div id="plans" class="plans">
-      <button class="plan" data-months="1" data-price="89"><div><b>1 месяц</b><small>30 дней</small></div><strong>89 ₽</strong><span class="check">✓</span></button>
-      <button class="plan" data-months="2" data-price="150"><div><b>2 месяца</b><small>60 дней</small></div><strong>150 ₽</strong><span class="check">✓</span></button>
-      <button class="plan" data-months="3" data-price="199"><div><b>3 месяца</b><small>90 дней</small></div><strong>199 ₽</strong><span class="check">✓</span></button>
-      <button class="plan popular" data-months="6" data-price="400"><em>ВЫГОДНО</em><div><b>6 месяцев</b><small>180 дней</small></div><strong>400 ₽</strong><span class="check">✓</span></button>
-    </div>
-  </section>
+<section><div class="wrap"><div class="feat">
+  <div><b>Без логов</b><span>Мы не храним историю подключений — только данные аккаунта для работы подписки.</span></div>
+  <div><b>Высокая скорость</b><span>Если скорость просела — напишите в поддержку, подберём сервер.</span></div>
+  <div><b>Любые устройства</b><span>Android, iPhone, Windows, macOS. Один ключ на все ваши устройства.</span></div>
+</div></div></section>
 
-  <section class="promo">
-    <div class="section-title"><span>Промокод</span><small>30 дней бесплатно или скидка 20–50%</small></div>
-    <div class="promo-row"><input id="promo" placeholder="Введите промокод" maxlength="20"><button id="promoBtn">→</button></div>
-    <p id="promoMsg"></p>
-  </section>
+<section id="how"><div class="wrap">
+  <h2>Как подключиться</h2><p class="lead">Три шага, около двух минут.</p>
+  <div class="steps">
+    <div class="step"><b>Войдите через Telegram</b><span>Аккаунт привязан к вашему Telegram — отдельный пароль не нужен.</span></div>
+    <div class="step"><b>Оплатите тариф</b><span>После оплаты подписка включится сама, ключ появится в кабинете и придёт в бота.</span></div>
+    <div class="step"><b>Вставьте ключ в приложение</b><span>Happ, v2rayNG, Hiddify, V2Box или FoXray: «Добавить подписку» → вставить ключ.</span></div>
+  </div>
+</div></section>
 
-  <button id="continue" class="continue" disabled><span>Продолжить</span><b id="selectedPrice">—</b></button>
-  <p id="buyMsg" class="buy-msg"></p>
+<section id="cab" class="hidden"><div class="wrap">
+  <h2 id="hello">Личный кабинет</h2>
+  <div class="grid4">
+    <div><small>Подписка</small><b id="cStatus">—</b></div><div><small>Действует до</small><b id="cExp">—</b></div>
+    <div><small>Баланс</small><b id="cBal">—</b></div><div><small>Скидка</small><b id="cDisc">—</b></div>
+  </div>
+  <div id="keyWrap" class="hidden"><small style="color:var(--muted)">Ваш ключ-подписка</small>
+    <div class="keybox"><input id="cKey" readonly><button class="btn" id="copyKey">Копировать</button></div></div>
+  <div class="promo"><input id="promo" placeholder="Промокод" maxlength="32"><button class="btn ghost" id="promoBtn">Применить</button></div>
+  <p class="msg" id="promoMsg"></p>
+  <h3 style="font-size:16px;margin:22px 0 12px">История платежей</h3><div id="pays"></div>
+  <button class="btn ghost" id="logout" style="margin-top:14px">Выйти</button>
+</div></section>
 
-  <section id="payments" class="card hidden">
-    <div class="section-title"><span>🧾 История платежей</span><small>Последние операции</small></div>
-    <div id="paymentsList" class="payments-list"></div>
-  </section>
+<section id="faq"><div class="wrap">
+  <h2>Частые вопросы</h2><p class="lead"></p>
+  <details><summary>Как активировать промокод?</summary><p>Войдите в кабинет, введите код и нажмите «Применить». Код даёт 30 дней бесплатно или скидку 20%, 30%, 50% на следующую покупку.</p></details>
+  <details><summary>Как оплатить подписку?</summary><p>Войдите через Telegram, выберите тариф и нажмите «Купить». Откроется страница оплаты; после оплаты подписка активируется автоматически.</p></details>
+  <details><summary>На скольких устройствах работает?</summary><p>До 3 устройств на один ключ.</p></details>
+  <details><summary>Что делать, если скорость низкая?</summary><p>Смените сервер в приложении или напишите в поддержку — поможем подобрать быстрый.</p></details>
+  <details><summary>Возможен ли возврат?</summary><p>Да, рассматривается индивидуально. Напишите в поддержку с Telegram ID и датой платежа.</p></details>
+  <details><summary>Вы храните логи?</summary><p>Нет. Мы не ведём логи подключений.</p></details>
+</div></section>
 
-  <section id="support" class="support card">
-    <div class="section-title"><span>🆘 Поддержка</span><small>Мы на связи 24/7</small></div>
-    <p class="support-sub">Вопросы по подписке, оплате и подключению — пишите любым удобным способом:</p>
-    <div class="support-buttons">
-      <a class="support-btn tg" href="https://t.me/ZUVIXv" target="_blank" rel="noopener"><span class="ico">✈️</span><span><b>Telegram</b><small>@ZUVIXv</small></span></a>
-      <a class="support-btn mail" href="mailto:zuviksvpn@gmail.com"><span class="ico">📧</span><span><b>Email</b><small>zuviksvpn@gmail.com</small></span></a>
-    </div>
-  </section>
-
-  <section id="faq" class="faq card">
-    <div class="section-title"><span>❓ Частые вопросы</span><small>FAQ</small></div>
-    <details>
-      <summary>Как активировать промокод?</summary>
-      <p>Введите код в поле «Промокод» и нажмите →. Результат появится сразу под полем. Промокод может дать 30 дней бесплатно или скидку 20%, 30% или 50% на следующую покупку — скидка автоматически отобразится в тарифах.</p>
-    </details>
-    <details>
-      <summary>Как оплатить подписку?</summary>
-      <p>Пополните баланс в личном кабинете (кнопки с суммой) — откроется страница оплаты, после оплаты баланс обновится автоматически. Затем выберите тариф и купите подписку в боте. Если что-то пошло не так — напишите в поддержку (@ZUVIXv).</p>
-    </details>
-    <details>
-      <summary>На скольких устройствах работает подписка?</summary>
-      <p>Доступ привязан к вашему Telegram ID — используйте его на всех своих устройствах.</p>
-    </details>
-    <details>
-      <summary>Что делать, если скорость низкая?</summary>
-      <p>Смените сервер в приложении или напишите в поддержку — поможем подобрать быстрый сервер.</p>
-    </details>
-    <details>
-      <summary>Возможен ли возврат?</summary>
-      <p>Да, возврат рассматривается индивидуально. Напишите в поддержку с указанием Telegram ID и даты платежа.</p>
-    </details>
-    <details>
-      <summary>Вы храните логи?</summary>
-      <p>Нет, мы не ведём логи подключений — только данные аккаунта, нужные для работы подписки.</p>
-    </details>
-  </section>
-
-  <section class="documents card">
-    <div class="section-title"><span>📚 Документация</span><small>Перед использованием</small></div>
-    <button class="doc" data-doc="privacy">🔒 <span>Политика конфиденциальности</span><b>›</b></button>
-    <button class="doc" data-doc="terms">📄 <span>Пользовательское соглашение</span><b>›</b></button>
-    <button class="doc" data-doc="bot-policy">🤖 <span>Политика бота</span><b>›</b></button>
-    <button class="doc" data-doc="refund">↩️ <span>Условия возврата</span><b>›</b></button>
-    <button class="doc" data-doc="setup">📱 <span>Инструкции по подключению</span><b>›</b></button>
-  </section>
-
-  <p class="fine">Используя ZUVIX VPN, вы подтверждаете ознакомление с документами сервиса.</p>
+<section id="support"><div class="wrap">
+  <h2>Поддержка</h2><p class="lead">Вопросы по подписке, оплате и подключению — пишите, мы на связи 24/7.</p>
+  <div class="sup"><a class="btn" href="https://t.me/ZUVIXv" target="_blank" rel="noopener">Telegram @ZUVIXv</a><a class="btn ghost" href="mailto:zuviksvpn@gmail.com">zuviksvpn@gmail.com</a></div>
+</div></section>
 </main>
 
-<div id="modal" class="modal hidden"><div class="modal-box"><button id="modalClose" class="modal-close">×</button><h2 id="modalTitle"></h2><div id="modalBody" class="modal-body"></div></div></div>
-<script src="app.js"></script>
+<footer><div class="wrap">
+  <div class="links">
+    <a href="https://telegra.ph/POLITIKA-KONFIDENCIALNOSTI-08-12-99" target="_blank" rel="noopener">Политика конфиденциальности</a>
+    <a href="https://telegra.ph/PUBLICHNAYA-OFERTA-08-12-15" target="_blank" rel="noopener">Пользовательское соглашение</a>
+    <a href="#" id="refundLink">Условия возврата</a>
+  </div>
+  Используя ZUVIX VPN, вы подтверждаете ознакомление с документами сервиса.
+</div></footer>
+
+<div class="modal hidden" id="modal"><div class="mbox"><h3>Условия возврата</h3>
+<p>Возврат рассматривается индивидуально с учётом законодательства и состояния цифровой услуги. Если доступ не был предоставлен или есть техническая проблема, поддержка проверит её и при необходимости восстановит доступ или рассмотрит возврат.</p>
+<p>В обращении укажите Telegram ID, дату платежа, тариф и описание проблемы. Не отправляйте данные карты и коды подтверждения.</p>
+<p><a href="https://t.me/ZUVIXv">@ZUVIXv</a> · <a href="mailto:zuviksvpn@gmail.com">zuviksvpn@gmail.com</a></p>
+<button class="btn ghost" id="mclose">Закрыть</button></div></div>
+
+<div class="modal hidden" id="loginModal"><div class="mbox"><h3>Вход через Telegram</h3>
+<p>Войдите, чтобы купить тариф и получить ключ. Данные аккаунта берутся из Telegram.</p>
+<div id="tgWidget" style="min-height:46px;margin-bottom:14px"></div>
+<button class="btn ghost" id="lclose">Закрыть</button></div></div>
+
+<script>
+// ===== НАСТРОЙКИ =====
+const API = "https://ВАШ-ДОМЕН-БОТА";   // публичный HTTPS-адрес, где запущен bot.py (без / в конце)
+const BOT = "zuvixvpn_bot";          // юзернейм бота без @
+// ======================
+const PLANS = [[1,"1 месяц",30,89],[2,"2 месяца",60,150],[3,"3 месяца",90,199],[6,"6 месяцев",180,400]];
+const $ = id => document.getElementById(id);
+let token = localStorage.getItem("zx_token") || "", me = null;
+
+async function api(path, body) {
+  const r = await fetch(API + path, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({token, ...body})});
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401) { logout(); }
+  return j;
+}
+function rub(n){ return Math.round(n).toLocaleString("ru-RU") + " ₽"; }
+
+function drawPlans() {
+  const pct = me?.user?.discount_percent || 0;
+  $("planGrid").innerHTML = "";
+  for (const [m, name, days, price] of PLANS) {
+    const el = document.createElement("div"); el.className = "plan" + (m === 6 ? " hot" : "");
+    const final = price * (100 - pct) / 100;
+    el.innerHTML = (m === 6 ? "<em>ВЫГОДНО</em>" : "") + `<h3>${name}</h3><span class="days">${days} дней</span>` +
+      `<div class="price">${pct ? `<s>${price}</s>` : ""}${rub(final)}</div><div class="per">≈ ${rub(final / m)} в месяц</div>`;
+    const b = document.createElement("button"); b.className = "btn"; b.textContent = "Купить";
+    b.onclick = () => buy(m, b); el.appendChild(b); $("planGrid").appendChild(el);
+  }
+}
+
+async function buy(m, btn) {
+  if (!token) { openLogin(); return; }
+  btn.disabled = true; $("buyMsg").textContent = "Создаём платёж…";
+  const j = await api("/api/site/pay", {months: m});
+  if (j.ok && j.pay_url) { location.href = j.pay_url; return; }
+  btn.disabled = false;
+  $("buyMsg").textContent = j.error === "too fast" ? "Подождите пару секунд и повторите." : "Не удалось создать платёж. Попробуйте позже или напишите в поддержку.";
+}
+
+async function loadMe() {
+  if (!token) return;
+  const j = await api("/api/site/me", {});
+  if (!j.ok) return;
+  me = j; const u = j.user;
+  $("cab").classList.remove("hidden"); $("loginTop").classList.add("hidden"); $("userTop").classList.remove("hidden");
+  $("hello").textContent = "Личный кабинет · " + (u.first_name || "ID " + u.tg_id);
+  const active = u.expires_at && new Date(u.expires_at) > new Date();
+  $("cStatus").textContent = active ? "Активна" : "Нет активной";
+  $("cExp").textContent = u.expires_at ? new Date(u.expires_at).toLocaleDateString("ru-RU") : "—";
+  $("cBal").textContent = rub(u.balance || 0);
+  $("cDisc").textContent = u.discount_percent ? u.discount_percent + "%" : "—";
+  $("keyWrap").classList.toggle("hidden", !(active && u.sub_url)); $("cKey").value = u.sub_url || "";
+  $("pays").innerHTML = "";
+  for (const p of j.payments) {
+    const d = document.createElement("div"); d.className = "pay";
+    const a = document.createElement("span"), b = document.createElement("b");
+    a.textContent = new Date(p.created_at).toLocaleDateString("ru-RU") + (p.months ? ` · ${p.months} мес.` : " · пополнение");
+    b.textContent = rub(p.amount); d.append(a, b); $("pays").appendChild(d);
+  }
+  if (!j.payments.length) $("pays").textContent = "Платежей пока нет.";
+  drawPlans();
+}
+
+function logout() { token = ""; me = null; localStorage.removeItem("zx_token"); $("cab").classList.add("hidden"); $("loginTop").classList.remove("hidden"); $("userTop").classList.add("hidden"); drawPlans(); }
+
+// Telegram Login Widget вызывает эту функцию после входа
+window.onTelegramAuth = async tgUser => {
+  const r = await fetch(API + "/api/site/login", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(tgUser)});
+  const j = await r.json().catch(() => ({}));
+  if (!j.ok) { alert("Не удалось войти. Попробуйте ещё раз."); return; }
+  token = j.token; localStorage.setItem("zx_token", token);
+  $("loginModal").classList.add("hidden"); await loadMe(); location.hash = "#cab";
+};
+function openLogin() {
+  $("loginModal").classList.remove("hidden");
+  if ($("tgWidget").childElementCount) return;
+  const s = document.createElement("script"); s.async = true; s.src = "https://telegram.org/js/telegram-widget.js?22";
+  s.dataset.telegramLogin = BOT; s.dataset.size = "large"; s.dataset.radius = "12"; s.dataset.onauth = "onTelegramAuth(user)"; s.dataset.requestAccess = "write";
+  $("tgWidget").appendChild(s);
+}
+
+$("loginTop").onclick = openLogin; $("lclose").onclick = () => $("loginModal").classList.add("hidden");
+$("logout").onclick = logout;
+$("refundLink").onclick = e => { e.preventDefault(); $("modal").classList.remove("hidden"); };
+$("mclose").onclick = () => $("modal").classList.add("hidden");
+$("copyKey").onclick = async () => { try { await navigator.clipboard.writeText($("cKey").value); $("copyKey").textContent = "Скопировано"; setTimeout(() => $("copyKey").textContent = "Копировать", 1800); } catch { $("cKey").select(); } };
+$("promoBtn").onclick = async () => {
+  const code = $("promo").value.trim(); if (!code) return;
+  const j = await api("/api/site/promo", {code}); $("promoMsg").textContent = j.message || "Ошибка, попробуйте позже.";
+  if (j.ok) { $("promo").value = ""; loadMe(); }
+};
+drawPlans(); loadMe();
+</script>
 </body>
 </html>
