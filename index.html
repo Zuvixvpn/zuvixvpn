@@ -86,7 +86,7 @@ footer .links{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}
 </div>
 
 <section id="plans"><div class="wrap">
-  <h2>Тарифы</h2><p class="lead">Оплата картой или СБП на странице платёжного сервиса. Доступ активируется автоматически.</p>
+  <h2>Тарифы</h2><p class="lead" id="plansLead">Оплата картой или СБП на странице платёжного сервиса. Доступ активируется автоматически.</p>
   <div class="plans" id="planGrid"></div>
   <p class="msg" id="buyMsg"></p>
 </div></section>
@@ -160,6 +160,8 @@ footer .links{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}
 // ===== НАСТРОЙКИ =====
 const API = "https://zuvixvpn.duckdns.org";   // публичный HTTPS-адрес бота (без / в конце)
 const BOT = "zuvixvpn_bot";          // юзернейм бота без @
+const BOT_ONLY = false;   // true: сайт-витрина, вход и оплата идут через Telegram-бота. false: вход и оплата на сайте (нужен API)
+const BOT_URL = "https://t.me/" + BOT;
 // ======================
 const PLANS = [[1,"1 месяц",30,89],[2,"2 месяца",60,150],[3,"3 месяца",90,199],[6,"6 месяцев",180,400]];
 const $ = id => document.getElementById(id);
@@ -181,12 +183,13 @@ function drawPlans() {
     const final = price * (100 - pct) / 100;
     el.innerHTML = (m === 6 ? "<em>ВЫГОДНО</em>" : "") + `<h3>${name}</h3><span class="days">${days} дней</span>` +
       `<div class="price">${pct ? `<s>${price}</s>` : ""}${rub(final)}</div><div class="per">≈ ${rub(final / m)} в месяц</div>`;
-    const b = document.createElement("button"); b.className = "btn"; b.textContent = "Купить";
+    const b = document.createElement("button"); b.className = "btn"; b.textContent = BOT_ONLY ? "Купить в боте" : "Купить";
     b.onclick = () => buy(m, b); el.appendChild(b); $("planGrid").appendChild(el);
   }
 }
 
 async function buy(m, btn) {
+  if (BOT_ONLY) { window.open(BOT_URL + "?start=buy" + m, "_blank"); return; }
   if (!token) { openLogin(); return; }
   btn.disabled = true; $("buyMsg").textContent = "Создаём платёж…";
   const j = await api("/api/site/pay", {months: m});
@@ -230,6 +233,7 @@ window.onTelegramAuth = async tgUser => {
   $("loginModal").classList.add("hidden"); await loadMe(); location.hash = "#cab";
 };
 function openLogin() {
+  if (BOT_ONLY) { window.open(BOT_URL, "_blank"); return; }
   $("loginModal").classList.remove("hidden");
   if ($("tgWidget").childElementCount) return;
   const s = document.createElement("script"); s.async = true; s.src = "https://telegram.org/js/telegram-widget.js?22";
@@ -247,7 +251,17 @@ $("promoBtn").onclick = async () => {
   const j = await api("/api/site/promo", {code}); $("promoMsg").textContent = j.message || "Ошибка, попробуйте позже.";
   if (j.ok) { $("promo").value = ""; loadMe(); }
 };
-drawPlans(); loadMe();
+if (BOT_ONLY) {
+  $("loginTop").textContent = "Открыть бота";
+  $("plansLead").textContent = "Оплата и выдача ключа — в Telegram-боте @" + BOT + ". Доступ активируется автоматически.";
+  const st = document.querySelectorAll(".step");
+  st[0].querySelector("b").textContent = "Откройте бота в Telegram";
+  st[0].querySelector("span").textContent = "Нажмите «Купить» или «Открыть бота» — откроется @" + BOT + ".";
+  st[1].querySelector("span").textContent = "Выберите тариф в боте. После оплаты подписка включится сама, ключ придёт в чат.";
+  document.querySelectorAll("#faq details")[1].querySelector("p").textContent = "Нажмите «Купить» на нужном тарифе: откроется Telegram-бот, где можно оплатить подписку. После оплаты она активируется автоматически.";
+  document.querySelectorAll("#faq details")[0].querySelector("p").textContent = "Введите промокод в боте: кнопка «Промокод» в меню. Код даёт 30 дней бесплатно или скидку 20%, 30%, 50% на следующую покупку.";
+} else { loadMe(); }
+drawPlans();
 </script>
 </body>
 </html>
