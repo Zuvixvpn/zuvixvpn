@@ -200,7 +200,7 @@ async function buy(m, btn) {
 
 async function loadMe() {
   if (!token) return;
-  const j = await api("/api/site/me", {});
+  let j; try { j = await api("/api/site/me", {}); } catch (e) { return; }
   if (!j.ok) return;
   me = j; const u = j.user;
   $("cab").classList.remove("hidden"); $("loginTop").classList.add("hidden"); $("userTop").classList.remove("hidden");
@@ -226,11 +226,16 @@ function logout() { token = ""; me = null; localStorage.removeItem("zx_token"); 
 
 // Telegram Login Widget вызывает эту функцию после входа
 window.onTelegramAuth = async tgUser => {
-  const r = await fetch(API + "/api/site/login", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(tgUser)});
-  const j = await r.json().catch(() => ({}));
-  if (!j.ok) { alert("Не удалось войти. Попробуйте ещё раз."); return; }
-  token = j.token; localStorage.setItem("zx_token", token);
-  $("loginModal").classList.add("hidden"); await loadMe(); location.hash = "#cab";
+  try {
+    const r = await fetch(API + "/api/site/login", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(tgUser)});
+    const j = await r.json().catch(() => ({}));
+    if (!j.ok) { alert("Не удалось войти (ответ сервера " + r.status + "). Попробуйте ещё раз или напишите в поддержку."); return; }
+    token = j.token; localStorage.setItem("zx_token", token);
+    $("loginModal").classList.add("hidden");
+    await loadMe();
+    if (!me) { alert("Вход выполнен, но кабинет не загрузился. Обновите страницу (Ctrl+F5)."); return; }
+    location.hash = "#cab";
+  } catch (e) { alert("Нет связи с сервером: " + e.message); }
 };
 function openLogin() {
   if (BOT_ONLY) { window.open(BOT_URL, "_blank"); return; }
