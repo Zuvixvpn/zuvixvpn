@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ZUVIX VPN — быстрый и безопасный доступ</title>
 <meta name="description" content="ZUVIX VPN: без логов, высокая скорость, подписка от 89 ₽. Оплата на сайте, ключ приходит сразу.">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Unbounded:wght@600;800&display=swap" rel="stylesheet">
 <style>
@@ -265,7 +266,23 @@ if (BOT_ONLY) {
   st[1].querySelector("span").textContent = "Выберите тариф в боте. После оплаты подписка включится сама, ключ придёт в чат.";
   document.querySelectorAll("#faq details")[1].querySelector("p").textContent = "Нажмите «Купить» на нужном тарифе: откроется Telegram-бот, где можно оплатить подписку. После оплаты она активируется автоматически.";
   document.querySelectorAll("#faq details")[0].querySelector("p").textContent = "Введите промокод в боте: кнопка «Промокод» в меню. Код даёт 30 дней бесплатно или скидку 20%, 30%, 50% на следующую покупку.";
-} else { loadMe(); }
+} else if (!(window.Telegram && Telegram.WebApp && Telegram.WebApp.initData)) { loadMe(); }
+
+// Открыто внутри Telegram («Открыть приложение» в боте): входим автоматически, без кнопки
+const tgApp = window.Telegram && Telegram.WebApp;
+async function tgAuto() {
+  try {
+    const r = await fetch(API + "/api/site/login_webapp", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({auth: tgApp.initData})});
+    const j = await r.json();
+    if (j.ok) { token = j.token; localStorage.setItem("zx_token", token); await loadMe(); }
+  } catch (e) {}
+}
+if (tgApp && tgApp.initData && !BOT_ONLY) {
+  tgApp.ready(); tgApp.expand();
+  (async () => { if (token) await loadMe(); if (!me) await tgAuto(); })();
+}
+if (location.hash === "#refund") $("modal").classList.remove("hidden");
+if (location.hash === "#cabinet") location.hash = "#cab";
 drawPlans();
 </script>
 </body>
